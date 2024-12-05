@@ -1,4 +1,4 @@
-﻿package com.matchingengine.model;
+package com.matchingengine.model;
 
 import java.time.Instant;
 

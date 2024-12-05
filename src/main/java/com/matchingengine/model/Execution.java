@@ -1,9 +1,16 @@
-﻿package com.matchingengine.model;
+package com.matchingengine.model;
+
+import jakarta.persistence.*;
 
 import java.time.Instant;
-
+@Entity
 public class Execution {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+    @OneToOne
     private Order buyOrder;
+    @OneToOne
     private Order sellOrder;
     private int quantity;
     private double price;
@@ -15,6 +22,10 @@ public class Execution {
         this.quantity = quantity;
         this.price = price;
         this.executedAt = Instant.now();
+    }
+
+    public Execution() {
+        
     }
 
     public Order getBuyOrder() {

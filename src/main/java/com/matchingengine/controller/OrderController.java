@@ -1,6 +1,6 @@
-﻿package com.matchingengine.controller;
+package com.matchingengine.controller;
 
-import com.matchingengine.model.Order;
+import com.matchingengine.model.OrderRequest;
 import com.matchingengine.model.OrderResponse;
 import com.matchingengine.service.MatchingEngine;
 import com.matchingengine.service.OrderService;
@@ -22,9 +22,9 @@ public class OrderController {
     private OrderService orderService;
     
     @PostMapping
-    public ResponseEntity<OrderResponse> createOrder(@RequestBody Order order) {
-//        OrderResponse response = matchingEngine.matchOrder(order);
-        orderService.createOrder(order);
+    public ResponseEntity<OrderResponse> createOrder(@RequestBody OrderRequest orderRequest) {
+
+        OrderResponse response  = matchingEngine.matchOrder(orderRequest);
         return ResponseEntity.ok(response);
     }
 }

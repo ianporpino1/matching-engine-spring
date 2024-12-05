@@ -1,4 +1,4 @@
-﻿package com.matchingengine.configuration;
+package com.matchingengine.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -1,12 +1,18 @@
-﻿package com.matchingengine.model;
+package com.matchingengine.model;
+
+import jakarta.persistence.*;
 
 import java.util.List;
 
-
+@Entity
+@Table(name = "users")
 public class User {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String email;
     private String password;
+    @OneToMany
     private List<Order> orders;
 
     public Long getId() {

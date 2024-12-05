@@ -1,7 +1,9 @@
-﻿package com.matchingengine.service;
+package com.matchingengine.service;
 
 import com.matchingengine.model.Order;
+import com.matchingengine.model.OrderRequest;
 import com.matchingengine.model.OrderResponse;
+import com.matchingengine.model.User;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -13,7 +15,11 @@ public class MatchingEngine {
         this.orderBookService = orderBookService;
     }
 
-    public OrderResponse matchOrder(Order order) {
+    public OrderResponse matchOrder(OrderRequest orderRequest) {
+        Order order = new Order(orderRequest.symbol(),orderRequest.orderType(),orderRequest.quantity(),orderRequest.price());
+        User user = new User();
+        user.setId(1L);
+        order.setUser(user);
         OrderResponse response = orderBookService.processOrder(order);
 
        // notificationService.notifyOrderStatus(order.getUserId(), response);

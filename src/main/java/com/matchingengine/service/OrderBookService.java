@@ -1,6 +1,7 @@
-﻿package com.matchingengine.service;
+package com.matchingengine.service;
 
 import com.matchingengine.model.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -9,6 +10,12 @@ import java.util.concurrent.ConcurrentHashMap;
 @Service
 public class OrderBookService {
     private final ConcurrentHashMap<String, OrderBook> orderBooks;
+    
+    @Autowired
+    private OrderService orderService;
+    
+    @Autowired
+    private ExecutionService executionService;
 
     public OrderBookService() {
         this.orderBooks = new ConcurrentHashMap<>();
@@ -23,7 +30,7 @@ public class OrderBookService {
         List<Execution> executions = orderBook.processOrder(order);
         
         if(executions.isEmpty()) {
-            orderService.save(order);
+            orderService.saveOrder(order);
             return new OrderResponse(
                     order.getId(),
                     order.getStatus(),
@@ -34,7 +41,7 @@ public class OrderBookService {
             );
         }
         
-        executionService.saveAll(executions);
+        executionService.saveAllExecutions(executions);
 
         int executedQuantity = executions.stream()
                 .filter(ex -> ex.getBuyOrder().equals(order) || ex.getSellOrder().equals(order))

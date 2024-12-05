@@ -1,8 +1,13 @@
-﻿package com.matchingengine.model;
+package com.matchingengine.model;
+
+import jakarta.persistence.*;
 
 import java.time.Instant;
-
+@Entity
+@Table(name = "orders")
 public class Order {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String symbol;
     private OrderType type;
@@ -10,6 +15,7 @@ public class Order {
     private double price;
     private int quantity;
     private Instant createdAt;
+    @ManyToOne
     private User user;
 
     public Order(String symbol, OrderType type, int quantity, double price) {
@@ -19,6 +25,10 @@ public class Order {
         this.quantity = quantity;
         this.createdAt = Instant.now();
         this.status = OrderStatus.ACCEPTED;
+    }
+
+    public Order() {
+        
     }
 
     public Long getId() {
