@@ -8,9 +8,9 @@ public class Execution {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @OneToOne
+    @ManyToOne
     private Order buyOrder;
-    @OneToOne
+    @ManyToOne
     private Order sellOrder;
     private int quantity;
     private double price;

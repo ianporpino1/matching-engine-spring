@@ -28,16 +28,16 @@ public class OrderBookService {
     public OrderResponse processOrder(Order order) {
         OrderBook orderBook = getOrderBook(order.getSymbol());
         List<Execution> executions = orderBook.processOrder(order);
+        orderService.saveOrder(order);
         
         if(executions.isEmpty()) {
-            orderService.saveOrder(order);
             return new OrderResponse(
                     order.getId(),
                     order.getStatus(),
                     0,
                     order.getQuantity(),
                     order.getCreatedAt(),
-                    order.getUser().getId()
+                    1L
             );
         }
         
@@ -57,7 +57,7 @@ public class OrderBookService {
                 executedQuantity,
                 remainingQuantity,
                 order.getCreatedAt(),
-                order.getUser().getId()
+                1L
         );
     }
 
