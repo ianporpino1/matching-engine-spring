@@ -5,6 +5,7 @@ import com.matchingengine.model.Order;
 import com.matchingengine.model.User;
 import com.matchingengine.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -23,10 +24,19 @@ public class OrderService {
     }
 
 
-
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
     public List<OrderResponse> getUserAuthenticatedOrders(UserDetails userDetails) {
         String username = userDetails.getUsername();
-        return orderRepository.findOrdersByUserUsername(username).stream()
+        boolean isAdmin = userDetails.getAuthorities().stream()
+                .anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"));
+        
+        List<Order> orders;
+        if (isAdmin) {
+            orders = orderRepository.findAll();
+        } else {
+            orders = orderRepository.findOrdersByUserUsername(username);
+        }
+        return orders.stream()
                 .map(OrderResponse::new)
                 .toList();
     }
