@@ -1,11 +1,11 @@
 package com.matchingengine.service;
 
 import com.matchingengine.model.Order;
-import com.matchingengine.model.OrderRequest;
-import com.matchingengine.model.OrderResponse;
+import com.matchingengine.controller.dto.OrderRequest;
+import com.matchingengine.controller.dto.OrderResponse;
 import com.matchingengine.model.User;
-import com.matchingengine.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -14,14 +14,17 @@ public class MatchingEngine {
     //private final NotificationService notificationService;
     
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
 
     public MatchingEngine(OrderBookService orderBookService) {
         this.orderBookService = orderBookService;
     }
 
-    public OrderResponse matchOrder(OrderRequest orderRequest) {
+    public OrderResponse matchOrder(OrderRequest orderRequest, UserDetails user) {
+        User currentUser = userService.getUserByUsername(user.getUsername());
         Order order = new Order(orderRequest.symbol(),orderRequest.orderType(),orderRequest.quantity(),orderRequest.price());
+
+        currentUser.addOrder(order);//mudar, ordem que deve ter usuario associado, nao usuario q tem ordens
         
         OrderResponse response = orderBookService.processOrder(order);
 

@@ -1,10 +1,13 @@
 package com.matchingengine.service;
 
+import com.matchingengine.controller.dto.OrderResponse;
 import com.matchingengine.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Service
@@ -28,36 +31,46 @@ public class OrderBookService {
     public OrderResponse processOrder(Order order) {
         OrderBook orderBook = getOrderBook(order.getSymbol());
         List<Execution> executions = orderBook.processOrder(order);
-        orderService.saveOrder(order);
         
         if(executions.isEmpty()) {
+            orderService.saveOrder(order);
             return new OrderResponse(
                     order.getId(),
                     order.getStatus(),
                     0,
-                    order.getQuantity(),
+                    order.getRemainingQuantity(),
                     order.getCreatedAt(),
-                    1L
+                    order.getUser().getId()
             );
         }
         
         executionService.saveAllExecutions(executions);
+        Set<Order> ordersToSave = new HashSet<>();
+        ordersToSave.add(order);
+        executions.forEach(execution -> {
+            if (execution.getBuyOrder() != null) {
+                ordersToSave.add(execution.getBuyOrder());
+            }
+            if (execution.getSellOrder() != null) {
+                ordersToSave.add(execution.getSellOrder());
+            }
+        });
+
+        // Salva todas as ordens envolvidas
+        orderService.saveAllOrders(ordersToSave);
 
         int executedQuantity = executions.stream()
                 .filter(ex -> ex.getBuyOrder().equals(order) || ex.getSellOrder().equals(order))
                 .mapToInt(Execution::getQuantity)
                 .sum();
-
-        int remainingQuantity = order.getQuantity();//ver qual o correto
-        //int remainingQuantity = order.getQuantity() - executedQuantity;
-
+        
         return new OrderResponse(
                 order.getId(),
                 order.getStatus(),
                 executedQuantity,
-                remainingQuantity,
+                order.getRemainingQuantity(),
                 order.getCreatedAt(),
-                1L
+                order.getUser().getId()
         );
     }
 

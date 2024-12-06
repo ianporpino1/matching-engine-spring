@@ -41,21 +41,21 @@ public class OrderBook {
             Order sellOrder = sellOrders.peek();
 
             if (buyOrder.getPrice() >= sellOrder.getPrice()) {
-                int quantity = Math.min(buyOrder.getQuantity(), sellOrder.getQuantity());
+                int quantity = Math.min(buyOrder.getRemainingQuantity(), sellOrder.getRemainingQuantity());
                 double price = sellOrder.getPrice();
 
                 executions.add(new Execution(buyOrder, sellOrder, quantity, price));
 
-                buyOrder.setQuantity(buyOrder.getQuantity() - quantity);
-                sellOrder.setQuantity(sellOrder.getQuantity() - quantity);
+                buyOrder.setRemainingQuantity(buyOrder.getRemainingQuantity() - quantity);
+                sellOrder.setRemainingQuantity(sellOrder.getRemainingQuantity() - quantity);
 
-                if (buyOrder.getQuantity() == 0) {
+                if (buyOrder.getRemainingQuantity() == 0) {
                     buyOrder.setStatus(OrderStatus.TOTALLY_EXECUTED);
                     buyOrders.poll();
                 } else {
                     buyOrder.setStatus(OrderStatus.PARTIALLY_EXECUTED);
                 }
-                if (sellOrder.getQuantity() == 0) {
+                if (sellOrder.getRemainingQuantity() == 0) {
                     sellOrder.setStatus(OrderStatus.TOTALLY_EXECUTED);
                     sellOrders.poll();
                 } else {

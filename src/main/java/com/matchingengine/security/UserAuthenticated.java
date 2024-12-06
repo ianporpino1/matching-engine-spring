@@ -1,4 +1,4 @@
-﻿package com.matchingengine.security;
+package com.matchingengine.security;
 
 import com.matchingengine.model.User;
 import org.springframework.security.core.GrantedAuthority;
@@ -47,5 +47,8 @@ public class UserAuthenticated implements UserDetails {
     @Override
     public boolean isEnabled() {
         return UserDetails.super.isEnabled();
+    }
+    public User getUser() {
+        return user;
     }
 }

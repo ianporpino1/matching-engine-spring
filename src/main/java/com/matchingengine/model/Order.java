@@ -13,7 +13,8 @@ public class Order {
     private OrderType type;
     private OrderStatus status;
     private double price;
-    private int quantity;
+    private int remainingQuantity;
+    private int totalQuantity;
     private Instant createdAt;
     @ManyToOne
     private User user;
@@ -22,14 +23,13 @@ public class Order {
         this.symbol = symbol;
         this.type = type;
         this.price = price;
-        this.quantity = quantity;
+        this.remainingQuantity = quantity;
+        this.totalQuantity = quantity;
         this.createdAt = Instant.now();
         this.status = OrderStatus.ACCEPTED;
     }
 
-    public Order() {
-        
-    }
+    public Order() {}
 
     public Long getId() {
         return id;
@@ -51,14 +51,6 @@ public class Order {
         return price;
     }
 
-    public int getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
-    }
-
     public Instant getCreatedAt() {
         return createdAt;
     }
@@ -77,5 +69,17 @@ public class Order {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public int getTotalQuantity() {
+        return totalQuantity;
+    }
+
+    public int getRemainingQuantity() {
+        return remainingQuantity;
+    }
+
+    public void setRemainingQuantity(int remainingQuantity) {
+        this.remainingQuantity = remainingQuantity;
     }
 }
