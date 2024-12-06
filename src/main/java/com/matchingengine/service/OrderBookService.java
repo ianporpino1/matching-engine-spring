@@ -55,8 +55,6 @@ public class OrderBookService {
                 ordersToSave.add(execution.getSellOrder());
             }
         });
-
-        // Salva todas as ordens envolvidas
         orderService.saveAllOrders(ordersToSave);
 
         int executedQuantity = executions.stream()

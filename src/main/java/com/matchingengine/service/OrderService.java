@@ -17,9 +17,6 @@ public class OrderService {
     @Autowired
     private OrderRepository orderRepository;
     
-    @Autowired
-    private UserService userService;
-    
     
     public void saveOrder(Order order) {
         orderRepository.save(order);
