@@ -41,29 +41,23 @@ public class OrderBook {
             Order sellOrder = sellOrders.peek();
 
             if (buyOrder.getPrice() >= sellOrder.getPrice()) {
-                // Calcula a quantidade restante de cada ordem
                 int buyRemainingQuantity = buyOrder.getTotalQuantity() - buyOrder.getExecutedQuantity();
                 int sellRemainingQuantity = sellOrder.getTotalQuantity() - sellOrder.getExecutedQuantity();
 
-                // Determina a quantidade a ser executada
                 int quantity = Math.min(buyRemainingQuantity, sellRemainingQuantity);
                 double price = sellOrder.getPrice();
 
                 executions.add(new Execution(buyOrder, sellOrder, quantity, price));
 
-                // Atualiza a quantidade executada das ordens
                 buyOrder.setExecutedQuantity(buyOrder.getExecutedQuantity() + quantity);
                 sellOrder.setExecutedQuantity(sellOrder.getExecutedQuantity() + quantity);
 
-                // Verifica se a ordem de compra foi totalmente executada
                 if (buyOrder.getTotalQuantity() == buyOrder.getExecutedQuantity()) {
                     buyOrder.setStatus(OrderStatus.TOTALLY_EXECUTED);
                     buyOrders.poll();
                 } else {
                     buyOrder.setStatus(OrderStatus.PARTIALLY_EXECUTED);
                 }
-
-                // Verifica se a ordem de venda foi totalmente executada
                 if (sellOrder.getTotalQuantity() == sellOrder.getExecutedQuantity()) {
                     sellOrder.setStatus(OrderStatus.TOTALLY_EXECUTED);
                     sellOrders.poll();
