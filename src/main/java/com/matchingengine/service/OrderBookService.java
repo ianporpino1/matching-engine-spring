@@ -37,8 +37,8 @@ public class OrderBookService {
             return new OrderResponse(
                     order.getId(),
                     order.getStatus(),
-                    0,
-                    order.getRemainingQuantity(),
+                    order.getExecutedQuantity(),
+                    order.getTotalQuantity(),
                     order.getCreatedAt(),
                     order.getUser().getId()
             );
@@ -66,7 +66,7 @@ public class OrderBookService {
                 order.getId(),
                 order.getStatus(),
                 executedQuantity,
-                order.getRemainingQuantity(),
+                order.getTotalQuantity(),
                 order.getCreatedAt(),
                 order.getUser().getId()
         );

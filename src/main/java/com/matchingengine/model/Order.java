@@ -13,7 +13,7 @@ public class Order {
     private OrderType type;
     private OrderStatus status;
     private double price;
-    private int remainingQuantity;
+    private int executedQuantity;
     private int totalQuantity;
     private Instant createdAt;
     @ManyToOne
@@ -23,7 +23,7 @@ public class Order {
         this.symbol = symbol;
         this.type = type;
         this.price = price;
-        this.remainingQuantity = quantity;
+        this.executedQuantity = 0;
         this.totalQuantity = quantity;
         this.createdAt = Instant.now();
         this.status = OrderStatus.ACCEPTED;
@@ -75,11 +75,11 @@ public class Order {
         return totalQuantity;
     }
 
-    public int getRemainingQuantity() {
-        return remainingQuantity;
+    public int getExecutedQuantity() {
+        return executedQuantity;
     }
 
-    public void setRemainingQuantity(int remainingQuantity) {
-        this.remainingQuantity = remainingQuantity;
+    public void setExecutedQuantity(int executedQuantity) {
+        this.executedQuantity = executedQuantity;
     }
 }

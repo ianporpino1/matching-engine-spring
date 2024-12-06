@@ -41,21 +41,30 @@ public class OrderBook {
             Order sellOrder = sellOrders.peek();
 
             if (buyOrder.getPrice() >= sellOrder.getPrice()) {
-                int quantity = Math.min(buyOrder.getRemainingQuantity(), sellOrder.getRemainingQuantity());
+                // Calcula a quantidade restante de cada ordem
+                int buyRemainingQuantity = buyOrder.getTotalQuantity() - buyOrder.getExecutedQuantity();
+                int sellRemainingQuantity = sellOrder.getTotalQuantity() - sellOrder.getExecutedQuantity();
+
+                // Determina a quantidade a ser executada
+                int quantity = Math.min(buyRemainingQuantity, sellRemainingQuantity);
                 double price = sellOrder.getPrice();
 
                 executions.add(new Execution(buyOrder, sellOrder, quantity, price));
 
-                buyOrder.setRemainingQuantity(buyOrder.getRemainingQuantity() - quantity);
-                sellOrder.setRemainingQuantity(sellOrder.getRemainingQuantity() - quantity);
+                // Atualiza a quantidade executada das ordens
+                buyOrder.setExecutedQuantity(buyOrder.getExecutedQuantity() + quantity);
+                sellOrder.setExecutedQuantity(sellOrder.getExecutedQuantity() + quantity);
 
-                if (buyOrder.getRemainingQuantity() == 0) {
+                // Verifica se a ordem de compra foi totalmente executada
+                if (buyOrder.getTotalQuantity() == buyOrder.getExecutedQuantity()) {
                     buyOrder.setStatus(OrderStatus.TOTALLY_EXECUTED);
                     buyOrders.poll();
                 } else {
                     buyOrder.setStatus(OrderStatus.PARTIALLY_EXECUTED);
                 }
-                if (sellOrder.getRemainingQuantity() == 0) {
+
+                // Verifica se a ordem de venda foi totalmente executada
+                if (sellOrder.getTotalQuantity() == sellOrder.getExecutedQuantity()) {
                     sellOrder.setStatus(OrderStatus.TOTALLY_EXECUTED);
                     sellOrders.poll();
                 } else {
@@ -68,6 +77,7 @@ public class OrderBook {
 
         return executions;
     }
+
 
 
     public synchronized List<Order> getBuyOrders() {
