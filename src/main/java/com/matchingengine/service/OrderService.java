@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Set;
@@ -23,8 +24,8 @@ public class OrderService {
         orderRepository.save(order);
     }
 
-
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
+    @Transactional
+    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     public List<OrderResponse> getUserAuthenticatedOrders(UserDetails userDetails) {
         String username = userDetails.getUsername();
         boolean isAdmin = userDetails.getAuthorities().stream()

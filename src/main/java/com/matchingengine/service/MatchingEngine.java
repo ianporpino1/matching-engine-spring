@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class MatchingEngine {
     public OrderBookService orderBookService;
-    //private final NotificationService notificationService;
     
     @Autowired
     private UserService userService;
@@ -24,12 +23,9 @@ public class MatchingEngine {
         User currentUser = userService.getUserByUsername(user.getUsername());
         Order order = new Order(orderRequest.symbol(),orderRequest.orderType(),orderRequest.quantity(),orderRequest.price());
 
-        currentUser.addOrder(order);//mudar, ordem que deve ter usuario associado, nao usuario q tem ordens
-        
-        OrderResponse response = orderBookService.processOrder(order);
+        currentUser.addOrder(order);
 
-       // notificationService.notifyOrderStatus(order.getUserId(), response);
-        return response;
+        return orderBookService.processOrder(order);
     }
 
 }
